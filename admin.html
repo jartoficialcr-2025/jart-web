@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel Admin - JART</title>
+  <link rel="icon" href="img/logo-jart.png">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: #fffaf5;
+      background-image: url('img/logo-jart.png');
+      background-size: 400px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      background-blend-mode: lighten;
+      color: #000;
+    }
+
+    header {
+      background-color: #ffa500;
+      color: #000;
+      text-align: center;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 1.4em;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      border-bottom: 2px solid #ffa500;
+    }
+
+    nav a {
+      padding: 15px;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      background-color: #ffa500;
+      color: #fff;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .card {
+      background-color: #ffa500;
+      color: #000;
+      border-radius: 10px;
+      padding: 10px;
+      position: relative;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .card button:hover {
+      background-color: #333;
+    }
+
+    .floating-add {
+      position: fixed;
+      top: 80px;
+      right: 30px;
+      background-color: #ffa500;
+      color: #000;
+      border: none;
+      font-size: 28px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+      z-index: 1000;
+    }
+
+    .floating-add:hover {
+      background-color: #ff7b00;
+    }
+
+    .panel-admin {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 350px;
+      height: 100%;
+      background-color: #fff;
+      border-left: 3px solid #ffa500;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+      padding: 20px;
+      transition: right 0.4s ease;
+      z-index: 999;
+    }
+
+    .panel-admin.active {
+      right: 0;
+    }
+
+    .panel-admin h3 {
+      color: #ffa500;
+    }
+
+    .panel-admin input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+    }
+
+    .panel-admin button {
+      background-color: #ffa500;
+      border: none;
+      color: #000;
+      padding: 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .panel-admin button:hover {
+      background-color: #ff7b00;
+    }
+
+    .encargos {
+      display: grid;
+      gap: 15px;
+    }
+
+    .encargo-card {
+      background-color: #fff;
+      border: 2px solid #ffa500;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .encargo-card h4 {
+      color: #ffa500;
+      margin-bottom: 5px;
+    }
+
+    select {
+      width: 100%;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    a.descarga {
+      color: #000;
+      text-decoration: underline;
+    }
+
+    .logout {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .logout button {
+      background-color: #ffa500;
+      border: none;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout button:hover {
+      background-color: #ff7b00;
+    }
+  </style>
+</head>
+<body>
+  <header>Panel Administrativo - JART</header>
+  <nav>
+    <a href="#" id="inicioTab">Inicio</a>
+    <a href="#" id="catalogoTab">Catálogo</a>
+    <a href="#" id="promocionesTab">Promociones</a>
+    <a href="#" id="encargosTab">Encargos</a>
+  </nav>
+
+  <button class="floating-add" id="addBtn">+</button>
+
+  <div class="panel-admin" id="adminPanel">
+    <h3>Administración</h3>
+    <input type="text" id="nombreProducto" placeholder="Nombre del producto">
+    <input type="number" id="precioProducto" placeholder="Precio">
+    <input type="file" id="imagenProducto" accept="image/*">
+    <button id="guardarProducto">Guardar</button>
+  </div>
+
+  <div class="container">
+    <section id="inicio" class="seccion">
+      <h2>Bienvenido Administrador</h2>
+      <p>Desde aquí puedes gestionar catálogo, promociones y encargos personalizados.</p>
+    </section>
+
+    <section id="catalogo" class="seccion" style="display:none;">
+      <h2>Catálogo</h2>
+      <div class="grid" id="catalogoGrid"></div>
+    </section>
+
+    <section id="promociones" class="seccion" style="display:none;">
+      <h2>Promociones</h2>
+      <div class="grid" id="promocionesGrid"></div>
+    </section>
+
+    <section id="encargos" class="seccion" style="display:none;">
+      <h2>Encargos Personalizados</h2>
+      <div class="encargos" id="encargosList"></div>
+    </section>
+
+    <div class="logout">
+      <button id="logoutBtn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEx1tsIW5ai7G3FdzNXVOCY7zAXC0_-Ik",
+      authDomain: "jart-oficial-8469e.firebaseapp.com",
+      projectId: "jart-oficial-8469e",
+      storageBucket: "jart-oficial-8469e.firebasestorage.app",
+      messagingSenderId: "699508762249",
+      appId: "1:699508762249:web:606df9c3c771c9353c4858"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const secciones = document.querySelectorAll('.seccion');
+    const botones = document.querySelectorAll('nav a');
+    let modo = "catalogo";
+
+    botones.forEach(boton => {
+      boton.addEventListener('click', () => {
+        const id = boton.id.replace('Tab', '');
+        secciones.forEach(sec => sec.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+        modo = id;
+      });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => window.location.href = "index.html");
+    });
+
+    // Mostrar/ocultar panel admin
+    const addBtn = document.getElementById("addBtn");
+    const panel = document.getElementById("adminPanel");
+    addBtn.addEventListener("click", () => {
+      panel.classList.toggle("active");
+    });
+
+    // Guardar nuevo producto
+    document.getElementById("guardarProducto").addEventListener("click", async () => {
+      const nombre = document.getElementById("nombreProducto").value;
+      const precio = document.getElementById("precioProducto").value;
+      const imagen = document.getElementById("imagenProducto").files[0];
+      if (!nombre || !precio || !imagen) return alert("Completa todos los campos.");
+
+      const refImg = ref(storage, modo + "/" + imagen.name);
+      await uploadBytes(refImg, imagen);
+      const url = await getDownloadURL(refImg);
+
+      await addDoc(collection(db, modo), { nombre, precio, imagen: url });
+
+      alert("Producto agregado correctamente");
+      panel.classList.remove("active");
+      cargarCatalogo();
+      cargarPromociones();
+    });
+
+    // Cargar catálogo y promociones
+    async function cargarCatalogo() {
+      const snap = await getDocs(collection(db, "catalogo"));
+      const grid = document.getElementById("catalogoGrid");
+      grid.innerHTML = "";
+      snap.forEach(docu => {
+        const data = docu.data();
+        grid.innerHTML += `
+          <div class="card">
+            <img src="${data.imagen}">
+            <h3>${data.nombre}</h3>
+            <p>₡${data.precio}</p>
+            <button onclick="eliminarProducto('${docu.id}', 'catalogo')">Eliminar</button>
+          </div>`;
+      });
+    }
+
+    async function cargarPromociones() {
+      const snap = await getDocs(collection(db, "promociones"));
+      const grid = document.getElementById("promocionesGrid");
+      grid.innerHTML = "";
+      snap.forEach(docu => {
+        const data = docu.data();
+        grid.innerHTML += `
+          <div class="card">
+            <img src="${data.imagen}">
+            <h3>${data.nombre}</h3>
+            <p>${data.precio}</p>
+            <button onclick="eliminarProducto('${docu.id}', 'promociones')">Eliminar</button>
+          </div>`;
+      });
+    }
+
+    window.eliminarProducto = async function (id, tipo) {
+      await deleteDoc(doc(db, tipo, id));
+      alert("Producto eliminado correctamente");
+      if (tipo === "catalogo") cargarCatalogo();
+      else cargarPromociones();
+    };
+
+    // Cargar encargos
+    async function cargarEncargos() {
+      const snap = await getDocs(collection(db, "encargos"));
+      const lista = document.getElementById("encargosList");
+      lista.innerHTML = "";
+      snap.forEach(async docu => {
+        const data = docu.data();
+        lista.innerHTML += `
+          <div class="encargo-card">
+            <h4>${data.nombre}</h4>
+            <p><b>Código:</b> ${data.codigo}</p>
+            <p><b>Correo:</b> ${data.correo}</p>
+            <p><b>Teléfono:</b> ${data.telefono}</p>
+            <p><b>Ubicación:</b> ${data.ubicacion}</p>
+            <p><b>Estilo:</b> ${data.estilo}</p>
+            <p><b>Formato:</b> ${data.formato}</p>
+            <p><b>Fecha:</b> ${data.fecha}</p>
+            <p><b>Archivo:</b> <a href="${data.imagen}" class="descarga" target="_blank">Descargar</a></p>
+            <label><b>Estado:</b></label>
+            <select onchange="actualizarEstado('${docu.id}', this.value)">
+              <option ${data.estado==='Pendiente'?'selected':''}>Pendiente</option>
+              <option ${data.estado==='Recibido'?'selected':''}>Recibido</option>
+              <option ${data.estado==='Visto'?'selected':''}>Visto</option>
+              <option ${data.estado==='Enviado'?'selected':''}>Enviado</option>
+            </select>
+          </div>`;
+      });
+    }
+
+    window.actualizarEstado = async function (id, estado) {
+      await updateDoc(doc(db, "encargos", id), { estado });
+      alert("Estado actualizado a: " + estado);
+    };
+
+    cargarCatalogo();
+    cargarPromociones();
+    cargarEncargos();
+  </script>
+</body>
+</html>

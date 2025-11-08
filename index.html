@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JART - Iniciar sesión</title>
+  <link rel="icon" href="img/logo-jart.png" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url('img/logo-jart.png');
+      background-size: 380px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-blend-mode: overlay;
+      background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.8);
+      border: 2px solid #ffa500;
+      border-radius: 15px;
+      padding: 40px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 165, 0, 0.4);
+    }
+
+    h2 {
+      color: #ffa500;
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ffa500;
+      background-color: #222;
+      color: #fff;
+      font-size: 1em;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffa500;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #ff7b00;
+    }
+
+    a {
+      color: #ffa500;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .links {
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Bienvenido a JART</h2>
+    <input type="email" id="email" placeholder="Correo" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button id="loginBtn">Entrar</button>
+    <div class="links">
+      <a href="#" id="createAccount">Crear cuenta</a> |
+      <a href="#" id="forgotPassword">¿Olvidaste tu contraseña?</a>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { 
+      getAuth, 
+      signInWithEmailAndPassword, 
+      createUserWithEmailAndPassword, 
+      sendEmailVerification, 
+      sendPasswordResetEmail 
+    } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+    // Configuración de tu Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEx1tsIW5ai7G3FdzNXVOCY7zAXC0_-Ik",
+      authDomain: "jart-oficial-8469e.firebaseapp.com",
+      projectId: "jart-oficial-8469e",
+      storageBucket: "jart-oficial-8469e.firebasestorage.app",
+      messagingSenderId: "699508762249",
+      appId: "1:699508762249:web:606df9c3c771c9353c4858"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Iniciar sesión
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          if (!user.emailVerified) {
+            alert("Por favor verifica tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.");
+            return;
+          }
+
+          if (email === "jartoficialcr@gmail.com") {
+            window.location.href = "admin.html";
+          } else {
+            window.location.href = "home.html";
+          }
+        })
+        .catch(error => {
+          alert("Error al iniciar sesión: " + error.message);
+        });
+    });
+
+    // Crear cuenta
+    document.getElementById("createAccount").addEventListener("click", () => {
+      const email = prompt("Ingresa tu correo:");
+      const password = prompt("Crea una contraseña (mínimo 6 caracteres):");
+      if (email && password) {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(userCredential => {
+            const user = userCredential.user;
+            sendEmailVerification(user)
+              .then(() => {
+                alert("Cuenta creada correctamente. Se envió un correo de verificación a " + email + ". Por favor verifica antes de iniciar sesión.");
+              })
+              .catch(err => alert("Error al enviar verificación: " + err.message));
+          })
+          .catch(error => {
+            alert("Error: " + error.message);
+          });
+      }
+    });
+
+    // Recuperar contraseña
+    document.getElementById("forgotPassword").addEventListener("click", () => {
+      const email = prompt("Ingresa tu correo para restablecer la contraseña:");
+      if (email) {
+        sendPasswordResetEmail(auth, email)
+          .then(() => alert("Se envió un correo para restablecer tu contraseña."))
+          .catch(error => alert("Error: " + error.message));
+      }
+    });
+  </script>
+</body>
+</html>

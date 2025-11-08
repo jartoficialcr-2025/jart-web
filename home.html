@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JART - Usuario</title>
+  <link rel="icon" href="img/logo-jart.png" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fffaf5;
+      color: #000;
+      margin: 0;
+      background-image: url('img/logo-jart.png');
+      background-size: 400px;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-attachment: fixed;
+      background-blend-mode: lighten;
+    }
+
+    header {
+      background-color: #ffa500;
+      color: #000;
+      padding: 15px;
+      text-align: center;
+      font-weight: bold;
+      font-size: 1.3em;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #fff;
+      border-bottom: 2px solid #ffa500;
+    }
+
+    nav a {
+      padding: 15px;
+      text-decoration: none;
+      color: #000;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      background-color: #ffa500;
+      color: #fff;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background-color: #ffa500;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      color: #000;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    form {
+      background-color: #ffa500;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      margin: 20px auto;
+      color: #000;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    form input, form select {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #000;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    form button {
+      background-color: #000;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background-color: #333;
+    }
+
+    .seguimiento {
+      background-color: #fff;
+      border: 2px solid #ffa500;
+      border-radius: 10px;
+      padding: 15px;
+      color: #000;
+      max-width: 600px;
+      margin: 30px auto;
+    }
+
+    .estado {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 8px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .barra {
+      height: 20px;
+      background-color: #ffa500;
+      width: 25%;
+      transition: 0.4s;
+    }
+
+    .logout {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .logout button {
+      background-color: #ffa500;
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .logout button:hover {
+      background-color: #ff7b00;
+    }
+  </style>
+</head>
+<body>
+  <header>JART - Catálogo de Arte</header>
+  <nav>
+    <a href="#" id="inicioTab">Inicio</a>
+    <a href="#" id="catalogoTab">Catálogo</a>
+    <a href="#" id="promocionesTab">Promociones</a>
+    <a href="#" id="encargosTab">Encargos Personalizados</a>
+    <a href="#" id="seguimientoTab">Seguimiento</a>
+    <a href="#" id="cerrarSesion">Cerrar sesión</a>
+  </nav>
+
+  <div class="container">
+    <section id="inicio" class="seccion">
+      <h2>Bienvenido a JART</h2>
+      <p>Explora nuestras obras, promociones y realiza tus propios encargos personalizados.</p>
+    </section>
+
+    <section id="catalogo" class="seccion" style="display:none;">
+      <h2>Catálogo</h2>
+      <div class="grid" id="catalogoGrid"></div>
+    </section>
+
+    <section id="promociones" class="seccion" style="display:none;">
+      <h2>Promociones</h2>
+      <div class="grid" id="promocionesGrid"></div>
+    </section>
+
+    <section id="encargos" class="seccion" style="display:none;">
+      <h2>Encargos Personalizados</h2>
+      <form id="encargoForm">
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+        <input type="email" id="correo" placeholder="Correo electrónico" required>
+        <input type="text" id="ubicacion" placeholder="Ubicación" required>
+        <input type="tel" id="telefono" placeholder="Número de teléfono" required>
+        <label for="estilo">Estilo:</label>
+        <select id="estilo">
+          <option value="Paisaje">Paisaje</option>
+          <option value="Ilustración">Ilustración</option>
+          <option value="Retrato">Retrato</option>
+          <option value="Otro">Otro</option>
+        </select>
+        <label for="formato">Formato:</label>
+        <select id="formato">
+          <option value="Hoja">Hoja</option>
+          <option value="Lienzo">Lienzo</option>
+        </select>
+        <input type="file" id="imagenEncargo" accept="image/*" required>
+        <button type="submit">Enviar Encargo</button>
+      </form>
+    </section>
+
+    <section id="seguimiento" class="seccion" style="display:none;">
+      <h2>Seguimiento de tu encargo</h2>
+      <div id="seguimientoContainer" class="seguimiento"></div>
+    </section>
+
+    <div class="logout">
+      <button id="logoutBtn">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDEx1tsIW5ai7G3FdzNXVOCY7zAXC0_-Ik",
+      authDomain: "jart-oficial-8469e.firebaseapp.com",
+      projectId: "jart-oficial-8469e",
+      storageBucket: "jart-oficial-8469e.firebasestorage.app",
+      messagingSenderId: "699508762249",
+      appId: "1:699508762249:web:606df9c3c771c9353c4858"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const secciones = document.querySelectorAll('.seccion');
+    const botones = document.querySelectorAll('nav a');
+
+    botones.forEach(boton => {
+      boton.addEventListener('click', () => {
+        const id = boton.id.replace('Tab', '');
+        secciones.forEach(sec => sec.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
+      });
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => window.location.href = "index.html");
+    });
+
+    // Mostrar catálogo y promociones
+    async function cargarCatalogo() {
+      const catalogoRef = collection(db, "catalogo");
+      const snap = await getDocs(catalogoRef);
+      const grid = document.getElementById("catalogoGrid");
+      grid.innerHTML = "";
+      snap.forEach(doc => {
+        const data = doc.data();
+        grid.innerHTML += `
+          <div class="card">
+            <img src="${data.imagen}" alt="${data.nombre}">
+            <h3>${data.nombre}</h3>
+            <p>₡${data.precio}</p>
+          </div>`;
+      });
+    }
+
+    async function cargarPromociones() {
+      const promoRef = collection(db, "promociones");
+      const snap = await getDocs(promoRef);
+      const grid = document.getElementById("promocionesGrid");
+      grid.innerHTML = "";
+      snap.forEach(doc => {
+        const data = doc.data();
+        grid.innerHTML += `
+          <div class="card">
+            <img src="${data.imagen}" alt="${data.nombre}">
+            <h3>${data.nombre}</h3>
+            <p>${data.precio}</p>
+          </div>`;
+      });
+    }
+
+    cargarCatalogo();
+    cargarPromociones();
+
+    // Enviar encargo personalizado
+    const encargoForm = document.getElementById("encargoForm");
+    encargoForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const archivo = document.getElementById("imagenEncargo").files[0];
+      const nombre = document.getElementById("nombre").value;
+      const correo = document.getElementById("correo").value;
+      const ubicacion = document.getElementById("ubicacion").value;
+      const telefono = document.getElementById("telefono").value;
+      const estilo = document.getElementById("estilo").value;
+      const formato = document.getElementById("formato").value;
+
+      const codigo = "JART-" + Math.floor(Math.random() * 10000).toString().padStart(2, '0');
+
+      const storageRef = ref(storage, "encargos/" + archivo.name);
+      await uploadBytes(storageRef, archivo);
+      const url = await getDownloadURL(storageRef);
+
+      await addDoc(collection(db, "encargos"), {
+        codigo,
+        nombre,
+        correo,
+        ubicacion,
+        telefono,
+        estilo,
+        formato,
+        imagen: url,
+        estado: "Pendiente",
+        fecha: new Date().toLocaleString()
+      });
+
+      alert(`Gracias por preferirnos, tu código es: ${codigo}. ¡Nos contactaremos pronto!`);
+      encargoForm.reset();
+    });
+  </script>
+</body>
+</html>

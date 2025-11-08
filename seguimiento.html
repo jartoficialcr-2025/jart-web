@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JART - Seguimiento</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: url('img/logo-jart.png') center/contain no-repeat fixed;
+      background-color: #fff;
+      background-blend-mode: lighten;
+      color: #333;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: rgba(255, 102, 0, 0.9);
+      color: #fff;
+      font-weight: bold;
+    }
+
+    nav a {
+      margin: 0 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    .contenedor {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 10px;
+    }
+
+    .encargo {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      overflow: hidden;
+      color: #000;
+    }
+
+    .barra {
+      background: #ff6600;
+      color: #fff;
+      padding: 10px;
+      font-weight: bold;
+    }
+
+    .detalle {
+      padding: 15px;
+      line-height: 1.6;
+    }
+
+    .detalle strong {
+      color: #ff6600;
+    }
+
+    .estado {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .estado span {
+      background: #ff6600;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 6px;
+    }
+
+    .vacio {
+      text-align: center;
+      margin-top: 50px;
+      color: #555;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">JART</div>
+    <nav>
+      <a href="home.html">Inicio</a>
+      <a href="catalogo.html">Catálogo</a>
+      <a href="promociones.html">Promociones</a>
+      <a href="home.html#formularioEncargo">Encargos personalizados</a>
+      <a href="seguimiento.html">Seguimiento</a>
+      <button onclick="cerrarSesion()">Cerrar sesión</button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="contenedor" id="listaEncargos">
+      <p class="vacio">Cargando tus encargos...</p>
+    </div>
+  </main>
+
+  <script>
+    function cerrarSesion() {
+      localStorage.removeItem("usuarioActivo");
+      window.location.href = "index.html";
+    }
+
+    function cargarEncargos() {
+      const lista = document.getElementById("listaEncargos");
+      lista.innerHTML = "";
+
+      const encargos = JSON.parse(localStorage.getItem("encargos")) || [];
+
+      if (encargos.length === 0) {
+        lista.innerHTML = `<p class="vacio">No tienes encargos en seguimiento actualmente.</p>`;
+        return;
+      }
+
+      encargos.forEach((encargo) => {
+        const div = document.createElement("div");
+        div.classList.add("encargo");
+        div.innerHTML = `
+          <div class="barra">${encargo.nombre}</div>
+          <div class="detalle">
+            <p><strong>Correo:</strong> ${encargo.correo}</p>
+            <p><strong>Teléfono:</strong> ${encargo.telefono}</p>
+            <p><strong>Tipo:</strong> ${encargo.tipo}</p>
+            <p><strong>Formato:</strong> ${encargo.formato}</p>
+            <p><strong>Detalles:</strong> ${encargo.detalles}</p>
+            <p><strong>Fecha de envío:</strong> ${encargo.fecha}</p>
+            <div class="estado">Estado: <span>${encargo.estado}</span></div>
+          </div>
+        `;
+        lista.appendChild(div);
+      });
+    }
+
+    cargarEncargos();
+  </script>
+</body>
+</html>
